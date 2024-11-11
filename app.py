@@ -27,14 +27,10 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-# Создание базы данных
+# Создание базы данных и тестового пользователя
 with app.app_context():
     db.create_all()
-
-
-# Пример пользователя для тестирования
-@app.before_first_request
-def create_test_user():
+    # Проверка и создание тестового пользователя
     if not User.query.filter_by(email="test@example.com").first():
         user = User(name="Test User", email="test@example.com")
         user.set_password("password123")
