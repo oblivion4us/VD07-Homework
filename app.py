@@ -1,9 +1,11 @@
 # app.py
+import webbrowser
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import EditProfileForm
 from flask_wtf.csrf import CSRFProtect
+import threading
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -61,5 +63,14 @@ def edit_profile():
     return render_template('edit_profile.html', form=form)
 
 
+def open_browser():
+    webbrowser.open_new("http://127.0.0.1:5000/edit_profile")
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Открываем браузер в отдельном потоке после запуска приложения
+    threading.Timer(1, open_browser).start()
+    # Отключаем перезагрузчик, чтобы избежать двойного запуска
+    app.run(debug=True, use_reloader=False)
+
+
